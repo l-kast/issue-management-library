@@ -33,6 +33,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
 
     implementation 'org.yaml:snakeyaml:1.29'
+
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.1'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

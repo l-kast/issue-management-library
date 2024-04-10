@@ -1,4 +1,4 @@
-INTERNAL_ISSUES:
+INTERNAL_ISSUE:
   VALIDATION_ISSUE:
     Description: Issues related to input validation or constraints not being met within the microservice.
   AUTHENTICATION_ISSUE:
@@ -15,7 +15,7 @@ INTERNAL_ISSUES:
     Description: Issues occurring during the execution of business logic or processing within the microservice.
   PERFORMANCE_ISSUE:
     Description: Issues indicating performance degradation or resource exhaustion within the microservice.
-DEPENDENCY_ISSUES:
+DEPENDENCY_ISSUE:
   SERVICE_ISSUE:
     Description: Issues indicating that an external service the microservice depends on has failed.
   SERVICE_TIMEOUT:

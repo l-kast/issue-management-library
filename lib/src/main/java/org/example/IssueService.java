@@ -5,23 +5,35 @@ package org.example;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.exceptions.IssueMappingException;
 import org.example.model.Issue;
 import org.example.model.IssueType;
 import org.example.model.Service;
+import org.example.model.Severity;
 
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.UUID;
 
 public class IssueService {
     private final IssueMapper issueMapper = new IssueMapper();
 
     private final Service service;
 
-    public IssueService(Service service) {
-        this.service = service;
+    public IssueService(String serviceId, String serviceName) {
+        this.service = new Service(serviceId, serviceName);
     }
 
-    public IssueService(int serviceId, String serviceName) {
-        this.service = new Service(serviceId, serviceName);
+    public Issue createIssue(IssueType issueType, Severity severity) {
+        return new Issue(issueType, severity, service, Instant.now());
+    }
+
+    public Issue createIssue(IssueType issueType, Severity severity, Instant timeStamp) {
+        return new Issue(issueType, severity, service, timeStamp);
+    }
+
+    public Issue createIssue(IssueType issueType, Severity severity, Instant timeStamp, Issue causeIssue, String note, UUID correlationID) {
+        return new Issue(issueType, severity, service, timeStamp, causeIssue, note, correlationID);
     }
 
     public Issue fromJson(String json) {
@@ -36,19 +48,43 @@ public class IssueService {
     public String toJson(Issue issue) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-
-            // Serialize the Person object to JSON
             return objectMapper.writeValueAsString(issue);
         } catch (JsonProcessingException e) {
             return null;
         }
     }
 
-    public Issue fromException(Exception exception) {
-        IssueType issueType = new IssueType(issueMapper.getIssueTypeFromException(exception.getClass().getSimpleName()));
-        Issue issue = new Issue(issueType);
-        issue.setTimeStamp(Instant.now());
-        issue.setService(service);
-        return issue;
+    public Issue createIssueFromException(Exception exception) {
+        if (exception == null) {
+            throw new IllegalArgumentException("Exception cannot be null");
+        }
+        String exceptionClassName = exception.getClass().getName();
+        IssueType issueType = issueMapper.getIssueTypeFromException(exceptionClassName);
+        if (issueType == null) {
+            throw new IssueMappingException("No IssueType found for exception: " + exceptionClassName);
+        }
+        Severity severity = Severity.ERROR; // Exceptions are treated as errors
+        Instant timeStamp = Instant.now();
+
+        StringBuilder detailsBuilder = new StringBuilder();
+        detailsBuilder.append("Caused by ").append(exception.getClass().getName()).append("\n");
+        detailsBuilder.append("Exception message: ").append(exception.getMessage()).append("\n");
+
+        Throwable cause = exception.getCause();
+        if (cause != null) {
+            detailsBuilder.append("Cause: ").append(cause).append("\n");
+        }
+
+        Throwable[] suppressed = exception.getSuppressed();
+        if (suppressed.length > 0) {
+            detailsBuilder.append("Suppressed exceptions: ").append(Arrays.toString(suppressed)).append("\n");
+        }
+
+        detailsBuilder.append("Stack trace: ").append(Arrays.toString(exception.getStackTrace()));
+
+        String details = detailsBuilder.toString();
+
+        return new Issue(issueType, severity, service, timeStamp, details);
     }
+
 }
