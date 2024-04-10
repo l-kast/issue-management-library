@@ -1,0 +1,32 @@
+INTERNAL_ISSUES:
+  VALIDATION_ISSUE:
+    Description: Issues related to input validation or constraints not being met within the microservice.
+  AUTHENTICATION_ISSUE:
+    Description: Issues related to authentication and authorization within the microservice.
+  RESOURCE_ISSUE:
+    Description: Issues indicating that a requested resource within the microservice does not exist or cannot be accessed.
+  DATA_INTEGRITY_ISSUE:
+    Description: Issues related to data integrity violations or inconsistencies within the microservice.
+  CONCURRENCY_ISSUE:
+    Description: Issues related to concurrent access or modification of shared resources within the microservice, leading to inconsistencies or race conditions.
+  CONFIGURATION_ISSUE:
+    Description: Issues indicating problems with configuration settings or parameters that prevent the microservice from functioning correctly.
+  EXECUTION_ISSUE:
+    Description: Issues occurring during the execution of business logic or processing within the microservice.
+  PERFORMANCE_ISSUE:
+    Description: Issues indicating performance degradation or resource exhaustion within the microservice.
+DEPENDENCY_ISSUES:
+  SERVICE_ISSUE:
+    Description: Issues indicating that an external service the microservice depends on has failed.
+  SERVICE_TIMEOUT:
+    Description: Issues indicating that the microservice's request to an external service timed out.
+  LIBRARY_ISSUE:
+    Description: Issues indicating problems related to libraries or external components used within the microservice.
+  DATABASE_ISSUE:
+    Description: Issues indicating problems or failures with the database the microservice relies on.
+  INFRASTRUCTURE_ISSUE:
+    Description: Issues indicating problems or failures with the underlying infrastructure (e.g., networking issues, server failures) that affect the microservice's operation.
+  COMMUNICATION_ISSUE:
+    Description: Issues indicating communication failures or problems with external services, such as network errors or protocol mismatches.
+  VERSION_COMPATIBILITY_ISSUE:
+    Description: Issues arising from incompatible versions or interfaces between the microservice and its dependencies, leading to failures in integration or communication.

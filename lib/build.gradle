@@ -29,7 +29,10 @@ dependencies {
 
     // For JSON parsing
 
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.16.1'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
+
+    implementation 'org.yaml:snakeyaml:1.29'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
