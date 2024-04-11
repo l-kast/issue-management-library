@@ -30,3 +30,6 @@ DEPENDENCY_ISSUE:
     Description: Issues indicating communication failures or problems with external services, such as network errors or protocol mismatches.
   VERSION_COMPATIBILITY_ISSUE:
     Description: Issues arising from incompatible versions or interfaces between the microservice and its dependencies, leading to failures in integration or communication.
+UNSPECIFIED:
+  UNSPECIFIED_ISSUE:
+    Description: Unspecified issue.

@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.model.IssueName;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yaml.snakeyaml.Yaml;
 
@@ -10,56 +11,48 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-/**
- * IssueNameTest is a JUnit test class for validating the correctness of the IssueName enum
- * and its usage in YAML files.
- */
 public class IssueNameTest {
 
-    /**
-     * Tests the presence of all enum values in a YAML file.
-     * It loads the YAML file and checks if each enum value exists in the specified sections of the file.
-     */
+    private Map<String, Object> internalIssues;
+    private Map<String, Object> dependencyIssues;
+    private Map<String, Object> unspecified;
+
+    @BeforeEach
+    public void setup() {
+        loadYamlFile();
+    }
+
+    private void loadYamlFile() {
+        Yaml yaml = new Yaml();
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("errorMappings.yaml");
+        Map<String, Object> obj = yaml.load(inputStream);
+        internalIssues = (Map<String, Object>) obj.get("INTERNAL_ISSUE");
+        dependencyIssues = (Map<String, Object>) obj.get("DEPENDENCY_ISSUE");
+        unspecified = (Map<String, Object>) obj.get("UNSPECIFIED");
+    }
+
     @Test
     public void testEnumsInYaml() {
-        Yaml yaml = new Yaml();
-        InputStream inputStream = this.getClass()
-                .getClassLoader()
-                .getResourceAsStream("errorMappings.yaml");
-        Map<String, Object> obj = yaml.load(inputStream);
-        Map<String, Object> internalIssues = (Map<String, Object>) obj.get("INTERNAL_ISSUES");
-        Map<String, Object> dependencyIssues = (Map<String, Object>) obj.get("DEPENDENCY_ISSUES");
-
         for (IssueName issue : IssueName.values()) {
-            boolean existsInYaml = internalIssues.containsKey(issue.name())
-                    || dependencyIssues.containsKey(issue.name());
-            assertTrue(existsInYaml, "Enum " + issue.name() + " not found in YAML");
+            assertTrue(isIssuePresentInYaml(issue), "Enum " + issue.name() + " not found in YAML");
         }
     }
 
-    /**
-     * The testYamlInEnums method is a JUnit test method that validates the correctness of loading values from a YAML file
-     * and checking if they exist in the IssueName enum.
-     */
+    private boolean isIssuePresentInYaml(IssueName issue) {
+        return internalIssues.containsKey(issue.name())
+                || dependencyIssues.containsKey(issue.name())
+                || unspecified.containsKey(issue.name());
+    }
+
     @Test
     public void testYamlInEnums() {
-        Yaml yaml = new Yaml();
-        InputStream inputStream = this.getClass()
-                .getClassLoader()
-                .getResourceAsStream("errorMappings.yaml");
-        Map<String, Object> obj = yaml.load(inputStream);
-        Map<String, Object> internalIssues = (Map<String, Object>) obj.get("INTERNAL_ISSUES");
-        Map<String, Object> dependencyIssues = (Map<String, Object>) obj.get("DEPENDENCY_ISSUES");
+        assertKeysInEnum(internalIssues);
+        assertKeysInEnum(dependencyIssues);
+        assertKeysInEnum(unspecified);
+    }
 
-        internalIssues.keySet().forEach(key -> {
-            try {
-                IssueName.valueOf(key.toUpperCase());
-            } catch (IllegalArgumentException ex) {
-                fail("YAML key " + key + " not found in enums");
-            }
-        });
-
-        dependencyIssues.keySet().forEach(key -> {
+    private void assertKeysInEnum(Map<String, Object> issueMap) {
+        issueMap.keySet().forEach(key -> {
             try {
                 IssueName.valueOf(key.toUpperCase());
             } catch (IllegalArgumentException ex) {
