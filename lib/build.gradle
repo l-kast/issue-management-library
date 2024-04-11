@@ -10,6 +10,8 @@ plugins {
     id 'java-library'
 }
 
+group 'com.github.lkast'
+
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
@@ -28,13 +30,11 @@ dependencies {
     implementation libs.guava
 
     // For JSON parsing
-
-
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
-
-    implementation 'org.yaml:snakeyaml:2.2'
-
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.1'
+
+    // For yaml parsing
+    implementation 'org.yaml:snakeyaml:2.2'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

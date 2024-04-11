@@ -1,4 +1,4 @@
-package org.example.model;
+package com.github.lkast.model;
 
 public enum IssueName {
     // Internal Issues

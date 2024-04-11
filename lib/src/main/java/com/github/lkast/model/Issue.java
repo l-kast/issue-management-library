@@ -1,9 +1,9 @@
-package org.example.model;
+package com.github.lkast.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.example.exceptions.IssueMappingException;
+import com.github.lkast.exceptions.IssueMappingException;
 
 import java.time.Instant;
 import java.util.UUID;

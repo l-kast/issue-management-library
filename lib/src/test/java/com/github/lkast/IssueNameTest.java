@@ -1,6 +1,6 @@
-package org.example;
+package com.github.lkast;
 
-import org.example.model.IssueName;
+import com.github.lkast.model.IssueName;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yaml.snakeyaml.Yaml;

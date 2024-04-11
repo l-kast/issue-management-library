@@ -1,9 +1,9 @@
-package org.example;
+package com.github.lkast;
 
-import org.example.exceptions.IssueMappingException;
-import org.example.model.IssueCategory;
-import org.example.model.IssueName;
-import org.example.model.IssueType;
+import com.github.lkast.exceptions.IssueMappingException;
+import com.github.lkast.model.IssueCategory;
+import com.github.lkast.model.IssueName;
+import com.github.lkast.model.IssueType;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileNotFoundException;

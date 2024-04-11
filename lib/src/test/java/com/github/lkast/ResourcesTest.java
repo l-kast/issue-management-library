@@ -1,4 +1,4 @@
-package org.example;
+package com.github.lkast;
 
 import org.junit.jupiter.api.Test;
 

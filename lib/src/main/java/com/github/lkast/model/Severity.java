@@ -1,4 +1,4 @@
-package org.example.model;
+package com.github.lkast.model;
 
 /**
  * Enumeration representing the severity levels of issues within a service.

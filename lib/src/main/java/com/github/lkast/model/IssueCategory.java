@@ -1,4 +1,4 @@
-package org.example.model;
+package com.github.lkast.model;
 
 /**
  * Enumeration representing various categories of failures or issues that can occur in the system.

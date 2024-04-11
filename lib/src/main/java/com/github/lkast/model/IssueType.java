@@ -1,4 +1,4 @@
-package org.example.model;
+package com.github.lkast.model;
 
 public record IssueType(IssueName name, String description, IssueCategory category) {
 

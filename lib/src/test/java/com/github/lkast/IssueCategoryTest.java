@@ -1,6 +1,6 @@
-package org.example;
+package com.github.lkast;
 
-import org.example.model.IssueCategory;
+import com.github.lkast.model.IssueCategory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yaml.snakeyaml.Yaml;
