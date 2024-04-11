@@ -5,6 +5,7 @@ package org.example;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.example.exceptions.IssueMappingException;
 import org.example.model.Issue;
 import org.example.model.IssueType;
@@ -15,12 +16,13 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.UUID;
 
-public class IssueService {
+public class IssueManager {
     private final IssueMapper issueMapper = new IssueMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     private final Service service;
 
-    public IssueService(String serviceId, String serviceName) {
+    public IssueManager(String serviceId, String serviceName) {
         this.service = new Service(serviceId, serviceName);
     }
 
@@ -36,21 +38,11 @@ public class IssueService {
         return new Issue(issueType, severity, service, timeStamp, causeIssue, note, correlationID);
     }
 
-    public Issue fromJson(String json) {
+    public Issue createIssueFromJson(String json) {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.readValue(json, Issue.class);
         } catch (JsonProcessingException e) {
-            return null;
-        }
-    }
-
-    public String toJson(Issue issue) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.writeValueAsString(issue);
-        } catch (JsonProcessingException e) {
-            return null;
+            throw new IssueMappingException("Error occurred while processing JSON", e);
         }
     }
 
@@ -87,4 +79,16 @@ public class IssueService {
         return new Issue(issueType, severity, service, timeStamp, details);
     }
 
+    public Issue createIssueFromHttpStatus(String httpStatus) {
+        if (httpStatus == null || httpStatus.isEmpty()) {
+            throw new IllegalArgumentException("HTTP Status cannot be null or empty.");
+        }
+
+        String httpStatusCode = httpStatus.split(" ")[0]; // Extract the status code from httpStatus string
+        IssueType issueType = issueMapper.getIssueTypeFromHttp(httpStatusCode);
+        Severity severity = Severity.ERROR; // Http errors are treated as issues
+        Instant timeStamp = Instant.now();
+        String details = "Caused by HTTP Error: " + httpStatus;
+        return new Issue(issueType, severity, service, timeStamp, details);
+    }
 }

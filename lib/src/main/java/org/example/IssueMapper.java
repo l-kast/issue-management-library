@@ -24,27 +24,57 @@ public class IssueMapper {
             loadProperties(httpCodeMappings, "httpCodeMappings.properties");
             loadProperties(javaExceptionMappings, "javaExceptionMappings.properties");
         } catch (IOException e) {
-            e.printStackTrace();
+            // Here we wrap the IOException in a RuntimeException.
+            // This will crash the program but ensures that errors won't go unnoticed.
+            throw new RuntimeException("Error loading properties files", e);
         }
     }
 
     private void loadProperties(Properties properties, String filename) throws IOException {
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filename);
-        if (inputStream != null) {
-            properties.load(inputStream);
-        } else {
-            throw new IOException("Couldn't load " + filename + " file");
+        // Use try-with-resources to ensure the InputStream gets closed
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filename)) {
+            if (inputStream != null) {
+                properties.load(inputStream);
+            } else {
+                throw new IOException("Couldn't load " + filename + " file");
+            }
         }
     }
 
     public IssueName getIssueNameFromHttp(String httpStatus) {
+        if (httpStatus == null) {
+            throw new IllegalArgumentException("HTTP status cannot be null");
+        }
+
         String issueString = this.httpCodeMappings.getProperty(httpStatus);
-        return IssueName.valueOf(issueString);
+
+        if (issueString == null) {
+            throw new IssueMappingException("No mapping found for HTTP status: " + httpStatus);
+        }
+
+        try {
+            return IssueName.valueOf(issueString);
+        } catch (IllegalArgumentException e) {
+            throw new IssueMappingException("Invalid issue name:" + issueString, e);
+        }
     }
 
     public IssueName getIssueNameFromException(String exception) {
+        if (exception == null) {
+            throw new IllegalArgumentException("Exception cannot be null");
+        }
+
         String issueString = this.javaExceptionMappings.getProperty(exception);
-        return IssueName.valueOf(issueString);
+
+        if (issueString == null) {
+            throw new IssueMappingException("No mapping found for exception: " + exception);
+        }
+
+        try {
+            return IssueName.valueOf(issueString);
+        } catch (IllegalArgumentException e) {
+            throw new IssueMappingException("Invalid issue name:" + issueString, e);
+        }
     }
 
     public String getHttpStatusFromIssueName(IssueName issueName) {
