@@ -92,7 +92,7 @@ public class IssueMapper {
 
     public IssueType getIssueTypeFromHttp(String httpStatus) {
         IssueName issueName = getIssueNameFromHttp(httpStatus);
-        return new IssueType(issueName, getExceptionFromIssueName(issueName), getCategoryForIssue(issueName));
+        return new IssueType(issueName, getDescriptionForIssue(issueName), getCategoryForIssue(issueName));
     }
 
     private String getFirstKeyMatchByValue(IssueName issueName, Properties properties) {
@@ -112,10 +112,14 @@ public class IssueMapper {
     }
 
     public String getDescriptionForIssue(IssueName issueName) {
+        if (issueName == null) {
+            throw new IllegalArgumentException("IssueName cannot be null");
+        }
+
         Yaml yaml = new Yaml();
         InputStream inputStream = IssueMapper.class
                 .getClassLoader()
-                .getResourceAsStream("errorMappings.yaml");
+                .getResourceAsStream("issues.yaml");
 
         Map<String, Map<String, Map<String, String>>> mappings = yaml.load(inputStream);
 
@@ -131,15 +135,19 @@ public class IssueMapper {
     }
 
     public IssueCategory getCategoryForIssue(IssueName issueName) {
+        if (issueName == null) {
+            throw new IllegalArgumentException("IssueName cannot be null");
+        }
+
         Yaml yaml = new Yaml();
         InputStream inputStream;
         try {
             inputStream = IssueMapper.class
                     .getClassLoader()
-                    .getResourceAsStream("errorMappings.yaml");
+                    .getResourceAsStream("issues.yaml");
 
             if (inputStream == null) {
-                throw new FileNotFoundException("errorMappings.yaml does not exist");
+                throw new FileNotFoundException("issues.yaml does not exist");
             }
 
             Map<String, Map<String, Map<String, String>>> mappings = yaml.load(inputStream);

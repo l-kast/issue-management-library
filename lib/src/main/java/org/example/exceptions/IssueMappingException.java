@@ -6,7 +6,6 @@ public class IssueMappingException extends RuntimeException {
         super(message);
     }
 
-    // Optional: Constructor that takes a message and a cause
     public IssueMappingException(String message, Throwable cause) {
         super(message, cause);
     }

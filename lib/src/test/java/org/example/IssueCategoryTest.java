@@ -22,7 +22,7 @@ public class IssueCategoryTest {
 
     private void loadYamlFile() {
         Yaml yaml = new Yaml();
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("errorMappings.yaml");
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("issues.yaml");
         obj = yaml.load(inputStream);
     }
 

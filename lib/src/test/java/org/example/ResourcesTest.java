@@ -13,7 +13,7 @@ class ResourcesTest {
 
     @Test
     void testResources() {
-        checkResource("errorMappings.yaml");
+        checkResource("issues.yaml");
         checkResource("httpCodeMappings.properties");
         checkResource("javaExceptionMappings.properties");
     }

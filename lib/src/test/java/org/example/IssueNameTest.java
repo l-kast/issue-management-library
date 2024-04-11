@@ -24,7 +24,7 @@ public class IssueNameTest {
 
     private void loadYamlFile() {
         Yaml yaml = new Yaml();
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("errorMappings.yaml");
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("issues.yaml");
         Map<String, Object> obj = yaml.load(inputStream);
         internalIssues = (Map<String, Object>) obj.get("INTERNAL_ISSUE");
         dependencyIssues = (Map<String, Object>) obj.get("DEPENDENCY_ISSUE");
