@@ -49,7 +49,7 @@ public class IssueMapper {
         String issueString = this.httpCodeMappings.getProperty(httpStatus);
 
         if (issueString == null) {
-            throw new IssueMappingException("No mapping found for HTTP status: " + httpStatus);
+            return IssueName.UNSPECIFIED_ISSUE;
         }
 
         try {
@@ -67,7 +67,7 @@ public class IssueMapper {
         String issueString = this.javaExceptionMappings.getProperty(exception);
 
         if (issueString == null) {
-            throw new IssueMappingException("No mapping found for exception: " + exception);
+            return IssueName.UNSPECIFIED_ISSUE;
         }
 
         try {
