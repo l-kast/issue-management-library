@@ -11,6 +11,7 @@ plugins {
 }
 
 group 'com.github.lkast'
+version '0.0.1'
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -47,4 +48,11 @@ java {
 tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+tasks.named('jar') {
+    manifest {
+        attributes('Implementation-Title': project.name,
+                'Implementation-Version': project.version)
+    }
 }
