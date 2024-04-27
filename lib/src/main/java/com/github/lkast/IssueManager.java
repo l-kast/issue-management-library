@@ -19,22 +19,61 @@ public class IssueManager {
 
     private final Service service;
 
+    /**
+     * Constructs a new IssueManager object with the provided service ID and service name.
+     *
+     * @param serviceId   The ID of the service.
+     * @param serviceName The name of the service.
+     */
     public IssueManager(String serviceId, String serviceName) {
         this.service = new Service(serviceId, serviceName);
     }
 
+    /**
+     * Creates an Issue object with the given parameters.
+     *
+     * @param issueType The type of the issue.
+     * @param severity  The severity level of the issue.
+     * @return The created Issue object.
+     */
     public Issue createIssue(IssueType issueType, Severity severity) {
         return new Issue(issueType, severity, service, Instant.now());
     }
 
+    /**
+     * Creates an Issue object with the given parameters.
+     *
+     * @param issueType  The type of the issue.
+     * @param severity   The severity level of the issue.
+     * @param timeStamp  The timestamp of the issue.
+     * @return The created Issue object.
+     */
     public Issue createIssue(IssueType issueType, Severity severity, Instant timeStamp) {
         return new Issue(issueType, severity, service, timeStamp);
     }
 
+    /**
+     * Creates an Issue object with the given parameters.
+     *
+     * @param issueType     The type of the issue.
+     * @param severity      The severity level of the issue.
+     * @param timeStamp     The timestamp of the issue.
+     * @param causeIssue    The issue that caused this issue (can be null).
+     * @param note          Additional note or details about the issue (can be null).
+     * @param correlationID The correlation ID of the issue (can be null).
+     * @return The created Issue object.
+     */
     public Issue createIssue(IssueType issueType, Severity severity, Instant timeStamp, Issue causeIssue, String note, UUID correlationID) {
         return new Issue(issueType, severity, service, timeStamp, causeIssue, note, correlationID);
     }
 
+    /**
+     * Creates an Issue object by deserializing JSON.
+     *
+     * @param json The JSON representation of an Issue object.
+     * @return The deserialized Issue object.
+     * @throws IssueMappingException If an error occurs while processing the JSON.
+     */
     public Issue createIssueFromJson(String json) {
         try {
             return objectMapper.readValue(json, Issue.class);
@@ -43,6 +82,14 @@ public class IssueManager {
         }
     }
 
+    /**
+     * Creates an Issue object based on the provided Exception.
+     *
+     * @param exception The Exception object from which to create the Issue.
+     * @return The created Issue object.
+     * @throws IllegalArgumentException If exception is null.
+     * @throws IssueMappingException If no IssueType mapping is found for the exception.
+     */
     public Issue createIssueFromException(Exception exception) {
         if (exception == null) {
             throw new IllegalArgumentException("Exception cannot be null");
@@ -76,6 +123,13 @@ public class IssueManager {
         return new Issue(issueType, severity, service, timeStamp, details);
     }
 
+    /**
+     * Creates an Issue object based on the provided HTTP status code.
+     *
+     * @param httpStatus The HTTP status code.
+     * @return The created Issue object.
+     * @throws IllegalArgumentException if httpStatus is null or empty.
+     */
     public Issue createIssueFromHttpStatus(String httpStatus) {
         if (httpStatus == null || httpStatus.isEmpty()) {
             throw new IllegalArgumentException("HTTP Status cannot be null or empty.");

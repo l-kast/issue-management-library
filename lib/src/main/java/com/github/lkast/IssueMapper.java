@@ -13,10 +13,24 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * The IssueMapper class is responsible for mapping issues between different representations.
+ * It provides methods to retrieve issue names, HTTP statuses, exceptions, descriptions, categories, and issue types.
+ */
 public class IssueMapper {
     private final Properties httpCodeMappings;
     private final Properties javaExceptionMappings;
 
+    /**
+     * The IssueMapper class is responsible for mapping HTTP status codes, exceptions,
+     * and issue names to their corresponding values. It uses properties files to
+     * store the mappings and provides methods to retrieve the mappings based on
+     * specific inputs.
+     * <p>
+     * This class relies on the loadProperties method to load the mappings from
+     * properties files. It throws an IOException if there is an error loading
+     * the properties files.
+     */
     public IssueMapper() {
         this.httpCodeMappings = new Properties();
         this.javaExceptionMappings = new Properties();
@@ -30,6 +44,13 @@ public class IssueMapper {
         }
     }
 
+    /**
+     * Loads properties from a specified file into a Properties object.
+     *
+     * @param properties The Properties object to load the properties into.
+     * @param filename   The name of the file to load the properties from.
+     * @throws IOException If an I/O error occurs while loading the properties.
+     */
     private void loadProperties(Properties properties, String filename) throws IOException {
         // Use try-with-resources to ensure the InputStream gets closed
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filename)) {
@@ -41,6 +62,14 @@ public class IssueMapper {
         }
     }
 
+    /**
+     * Retrieves the {@link IssueName} associated with the given HTTP status.
+     *
+     * @param httpStatus The HTTP status code.
+     * @return The {@link IssueName} associated with the HTTP status.
+     * @throws IllegalArgumentException if httpStatus is null.
+     * @throws IssueMappingException if no mapping is found for the HTTP status.
+     */
     public IssueName getIssueNameFromHttp(String httpStatus) {
         if (httpStatus == null) {
             throw new IllegalArgumentException("HTTP status cannot be null");
@@ -59,6 +88,10 @@ public class IssueMapper {
         }
     }
 
+    /**
+     * Retrieves the {@link IssueName} associated with the given exception.
+     *
+     */
     public IssueName getIssueNameFromException(String exception) {
         if (exception == null) {
             throw new IllegalArgumentException("Exception cannot be null");
@@ -77,24 +110,59 @@ public class IssueMapper {
         }
     }
 
+    /**
+     * Retrieves the HTTP status code associated with the given IssueName.
+     *
+     * @param issueName The IssueName for which to retrieve the HTTP status code.
+     * @return The HTTP status code associated with the IssueName, or null if no match is found.
+     */
     public String getHttpStatusFromIssueName(IssueName issueName) {
         return getFirstKeyMatchByValue(issueName, httpCodeMappings);
     }
 
+    /**
+     * Retrieves the exception name associated with the given IssueName.
+     *
+     * @param issueName The IssueName for which to retrieve the exception name.
+     * @return The exception name associated with the IssueName, or null if no match is found.
+     */
     public String getExceptionFromIssueName(IssueName issueName) {
         return getFirstKeyMatchByValue(issueName, javaExceptionMappings);
     }
 
+    /**
+     * Retrieves the IssueType based on the provided exception name.
+     *
+     * @param exception The name of the exception.
+     * @return The IssueType object representing the issue.
+     * @throws IllegalArgumentException if exception is null.
+     * @throws IssueMappingException if no mapping is found for the exception name.
+     */
     public IssueType getIssueTypeFromException(String exception) {
         IssueName issueName = getIssueNameFromException(exception);
         return new IssueType(issueName, getDescriptionForIssue(issueName), getCategoryForIssue(issueName));
     }
 
+    /**
+     * Retrieves the IssueType based on the provided HTTP status code.
+     *
+     * @param httpStatus The HTTP status code.
+     * @return The IssueType object representing the issue.
+     * @throws IllegalArgumentException if httpStatus is null.
+     * @throws IssueMappingException if no mapping is found for the HTTP status code.
+     */
     public IssueType getIssueTypeFromHttp(String httpStatus) {
         IssueName issueName = getIssueNameFromHttp(httpStatus);
         return new IssueType(issueName, getDescriptionForIssue(issueName), getCategoryForIssue(issueName));
     }
 
+    /**
+     * Retrieves the first key that matches the given value in the provided properties.
+     *
+     * @param issueName   the IssueName to match against the property values
+     * @param properties  the Properties object to search for the matching key
+     * @return the first key that matches the given value, or null if no match is found
+     */
     private String getFirstKeyMatchByValue(IssueName issueName, Properties properties) {
         Enumeration<?> keys = properties.propertyNames();
         String issueNameString = issueName.name();
@@ -111,6 +179,13 @@ public class IssueMapper {
         return null;
     }
 
+    /**
+     * Retrieves the description for a specific issue.
+     *
+     * @param issueName The name of the issue.
+     * @return The description of the issue, or null if no description is found.
+     * @throws IllegalArgumentException if the issueName is null.
+     */
     public String getDescriptionForIssue(IssueName issueName) {
         if (issueName == null) {
             throw new IllegalArgumentException("IssueName cannot be null");
@@ -134,6 +209,15 @@ public class IssueMapper {
         return null;
     }
 
+
+    /**
+     * Retrieves the category for a given issue.
+     *
+     * @param issueName The name of the issue.
+     * @return The category of the issue.
+     * @throws IllegalArgumentException if the issueName is null.
+     * @throws IssueMappingException if no mapping is found for the issueName.
+     */
     public IssueCategory getCategoryForIssue(IssueName issueName) {
         if (issueName == null) {
             throw new IllegalArgumentException("IssueName cannot be null");
